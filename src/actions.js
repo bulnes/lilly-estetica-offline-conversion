@@ -2,7 +2,7 @@ import { DataBaseMemory } from "./repository/database-memory.js";
 import { DataBasePostgres } from "./repository/database-postgres.js";
 import { generateUniqueId } from "./utils.js";
 
-const isProduction = true; // process.env.NODE_ENV !== "development";
+const isProduction = process.env.NODE_ENV !== "development";
 const database = isProduction ? new DataBasePostgres() : new DataBaseMemory();
 
 // Create Unique User ID
