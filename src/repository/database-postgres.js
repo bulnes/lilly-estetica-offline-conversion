@@ -3,7 +3,6 @@ import postgres from "postgres";
 
 export class DataBasePostgres {
   sql;
-  data = new Map();
 
   constructor() {
     this.configure();
@@ -15,19 +14,6 @@ export class DataBasePostgres {
 
     this.sql = postgres(URL, { ssl: "require" });
 
-    await this.createTables();
-    const allConversions = await this.getAllConversions();
-
-    // Save all conversions on memory
-    allConversions.forEach((conversion) => {
-      const { unique_id } = conversion;
-
-      this.saveUniqueId(unique_id);
-      this.saveConversionOnMemory(unique_id, conversion);
-    });
-  }
-
-  async createTables() {
     // Create table conversions
     await this.sql`
       CREATE TABLE IF NOT EXISTS conversions (
@@ -38,29 +24,16 @@ export class DataBasePostgres {
         referrer TEXT NOT NULL
       )
     `;
-  }
 
-  async getAllConversions() {
-    // Get all conversions from database
-    const data = await this.sql`
-      SELECT * FROM conversions
+    // Add created_at column
+    await this.sql`
+      ALTER TABLE conversions
+      ADD COLUMN IF NOT EXISTS created_at TIMESTAMP DEFAULT NOW()
     `;
-
-    return Array.from(data);
-  }
-
-  saveConversionOnMemory(uniqueId, conversion) {
-    user.conversions.push(conversion);
-  }
-
-  saveUniqueId(uniqueId) {
-    this.data.set(uniqueId, []);
   }
 
   async saveOfflineConversion(uniqueId, conversion) {
     const { search, baseUrl, referrer } = conversion;
-
-    this.saveConversionOnMemory(uniqueId, conversion);
 
     // Save conversion in database
     await this.sql`
@@ -70,7 +43,10 @@ export class DataBasePostgres {
   }
 
   async getOfflineConversions(uniqueId) {
-    const user = this.data.get(uniqueId);
-    return Array.from(user.conversions);
+    const conversions = await this.sql`
+      SELECT * FROM conversions WHERE unique_id = ${uniqueId}
+    `;
+
+    return conversions;
   }
 }

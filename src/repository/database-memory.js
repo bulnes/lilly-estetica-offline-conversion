@@ -6,7 +6,11 @@ export class DataBaseMemory {
   }
 
   saveOfflineConversion(uniqueId, conversion) {
-    const user = this.data.get(uniqueId);
+    let user = this.data.get(uniqueId);
+    if (!user) {
+      this.data.set(uniqueId, []);
+      user = this.data.get(uniqueId);
+    }
 
     user.conversions = user.conversions || [];
     user.conversions.push(conversion);
@@ -15,6 +19,6 @@ export class DataBaseMemory {
   getOfflineConversions(uniqueId) {
     const user = this.data.get(uniqueId);
 
-    return user.conversions;
+    return user?.conversions || [];
   }
 }
