@@ -10,7 +10,10 @@ const app = express();
 const port = process.env.PORT || 3000;
 const isProduction = process.env.NODE_ENV !== "development";
 const allowedOrigins = isProduction
-  ? ["https://www.lillyestetica.com.br"]
+  ? [
+      "https://lilly-estetica-poc.vercel.app",
+      "https://www.lillyestetica.com.br",
+    ]
   : [
       "http://localhost:3000",
       "http://localhost:8080",
