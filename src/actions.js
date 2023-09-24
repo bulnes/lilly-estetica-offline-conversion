@@ -1,9 +1,9 @@
 import { logger } from "./logger.js";
 import { DataBaseMemory } from "./repository/database-memory.js";
-import { DataBasePostgres } from "./repository/database-postgres.js";
+import { DataBaseMongoDB } from "./repository/database-mongodb.js";
 
 const isProduction = process.env.NODE_ENV !== "development";
-const database = isProduction ? new DataBasePostgres() : new DataBaseMemory();
+const database = isProduction ? new DataBaseMongoDB() : new DataBaseMemory();
 
 // Register Conversion
 export const registerConversionAction = async (req, res) => {
