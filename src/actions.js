@@ -8,12 +8,18 @@ const database = isProduction ? new DataBaseMongoDB() : new DataBaseMemory();
 // Register Conversion
 export const registerConversionAction = async (req, res) => {
   const { id } = req.params;
-  const { search, baseUrl, referrer } = req.body;
+  const { search, baseUrl, referrer, clientId, sessionId } = req.body;
 
   logger.log("info", `Registering conversion for user ${id}`);
 
   try {
-    await database.saveOfflineConversion(id, { search, baseUrl, referrer });
+    await database.saveOfflineConversion(id, {
+      search,
+      baseUrl,
+      referrer,
+      clientId,
+      sessionId,
+    });
 
     logger.log("info", `Conversion registered for user ${id}`);
 

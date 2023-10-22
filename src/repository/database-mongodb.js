@@ -25,6 +25,8 @@ export class DataBaseMongoDB {
       search: String,
       baseUrl: String,
       referrer: String,
+      clientId: String,
+      sessionId: String,
       createdAt: { type: Date, default: Date.now },
     });
 
@@ -32,7 +34,7 @@ export class DataBaseMongoDB {
   }
 
   async saveOfflineConversion(uniqueId, conversion) {
-    const { search, baseUrl, referrer } = conversion;
+    const { search, baseUrl, referrer, clientId, sessionId } = conversion;
 
     // Save conversion in database
     this.conversion.create({
@@ -40,6 +42,8 @@ export class DataBaseMongoDB {
       search,
       baseUrl,
       referrer,
+      clientId,
+      sessionId,
     });
   }
 
